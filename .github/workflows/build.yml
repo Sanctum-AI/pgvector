@@ -48,7 +48,7 @@ jobs:
         include:
           - postgres: 16
             os: macos-14
-          - postgres: 14
+          - postgres: 16
             os: macos-12
     steps:
       - uses: actions/checkout@v4
