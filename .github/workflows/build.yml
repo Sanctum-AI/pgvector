@@ -47,9 +47,9 @@ jobs:
       matrix:
         include:
           - postgres: 16
-            os: macos-14
+            os: macos-13-xlarge # arm64
           - postgres: 16
-            os: macos-12
+            os: macos-13 # x86-64
     steps:
       - uses: actions/checkout@v4
       - uses: ankane/setup-postgres@v1
@@ -58,6 +58,18 @@ jobs:
       - run: make
         env:
           PG_CFLAGS: -DUSE_ASSERT_CHECKING -Wall -Wextra -Werror -Wno-unused-parameter
+      - name: Pack artifacts
+        id: pack_artifacts
+        run: |
+          ARCH=$(uname -m)
+          echo "Platform architecture is ${ARCH}"
+          mkdir -p ./lib/postgresql/
+          cp vector.dylib ./lib/postgresql/
+          mkdir ./extension/
+          cp vector.control ./extension/
+          cp sql/vector--* ./extension/
+          zip -r pgvector-bin-macos-${ARCH}.zip ./lib/ ./extension/
+          unzip -l pgvector-bin-macos-${ARCH}.zip
       - run: make install
       - run: make installcheck
       - if: ${{ failure() }}
