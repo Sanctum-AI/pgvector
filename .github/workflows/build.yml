@@ -47,9 +47,9 @@ jobs:
       matrix:
         include:
           - postgres: 16
-            os: macos-13-xlarge # arm64
+            os: macos-14-xlarge # arm64
           - postgres: 16
-            os: macos-13 # x86-64
+            os: macos-14 # x86-64
     steps:
       - uses: actions/checkout@v4
       - uses: ankane/setup-postgres@v1
