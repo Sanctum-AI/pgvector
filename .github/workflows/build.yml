@@ -29,6 +29,18 @@ jobs:
       - run: make
         env:
           PG_CFLAGS: -DUSE_ASSERT_CHECKING -Wall -Wextra -Werror -Wno-unused-parameter -Wno-sign-compare
+      - name: Pack artifacts
+        id: pack_artifacts
+        run: |
+          ARCH=$(uname -m)
+          echo "Platform architecture is ${ARCH}"
+          mkdir -p ./lib/postgresql/
+          cp vector.so ./lib/postgresql/
+          mkdir ./extension/
+          cp vector.control ./extension/
+          cp sql/vector--* ./extension/
+          zip -r pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip ./lib/ ./extension/
+          unzip -l pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip
       - run: |
           export PG_CONFIG=`which pg_config`
           sudo --preserve-env=PG_CONFIG make install
@@ -68,8 +80,8 @@ jobs:
           mkdir ./extension/
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
-          zip -r pgvector-bin-macos-${ARCH}.zip ./lib/ ./extension/
-          unzip -l pgvector-bin-macos-${ARCH}.zip
+          zip -r pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip ./lib/ ./extension/
+          unzip -l pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip
       - run: make install
       - run: make installcheck
       - if: ${{ failure() }}
