@@ -34,8 +34,8 @@ jobs:
         run: |
           ARCH=$(uname -m)
           echo "Platform architecture is ${ARCH}"
-          mkdir -p ./lib/postgresql/
-          cp vector.so ./lib/postgresql/
+          mkdir -p ./lib/
+          cp vector.so ./lib/
           mkdir ./extension/
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ankane/setup-postgres@v1
         with:
-          postgres-version: 14
+          postgres-version: 16
       - run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" && ^
           nmake /NOLOGO /F Makefile.win && ^
@@ -117,6 +117,15 @@ jobs:
           nmake /NOLOGO /F Makefile.win clean && ^
           nmake /NOLOGO /F Makefile.win uninstall
         shell: cmd
+      - name: Pack artifacts
+        id: pack_artifacts
+        run: |
+          New-Item -ItemType Directory -Path "lib" -Force | Out-Null
+          Copy-Item -Path "vector.dll" -Destination "lib" -Force
+          New-Item -ItemType Directory -Path "extension" -Force | Out-Null
+          Copy-Item -Path "vector.control" -Destination "extension" -Force
+          Get-ChildItem -Path "sql" -Filter "vector--*" | Copy-Item -Destination "extension" -Force
+          Compress-Archive -Path "lib", "extension" -Destination "pgvector-16-bin-windows-x64.zip" -CompressionLevel Fastest
       - if: ${{ failure() }}
         run: cat regression.diffs
   i386:
