@@ -29,12 +29,12 @@ sql\$(EXTENSION)--$(EXTVERSION).sql: sql\$(EXTENSION).sql
 !error PGROOT is not set
 !endif
 PGROOT = "C:\Program Files\PostgreSQL\16\"
-BINDIR = $(PGROOT)\bin
-INCLUDEDIR = $(PGROOT)\include
-INCLUDEDIR_SERVER = $(PGROOT)\include\server
-LIBDIR = $(PGROOT)\lib
-PKGLIBDIR = $(PGROOT)\lib
-SHAREDIR = $(PGROOT)\share
+BINDIR = "$(PGROOT)\bin"
+INCLUDEDIR = "$(PGROOT)\include"
+INCLUDEDIR_SERVER = "$(PGROOT)\include\server"
+LIBDIR = "$(PGROOT)\lib"
+PKGLIBDIR = "$(PGROOT)\lib"
+SHAREDIR = "$(PGROOT)\share"
 
 CFLAGS = /nologo /I"$(INCLUDEDIR_SERVER)\port\win32_msvc" /I"$(INCLUDEDIR_SERVER)\port\win32" /I"$(INCLUDEDIR_SERVER)" /I"$(INCLUDEDIR)"
 
