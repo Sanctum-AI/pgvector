@@ -53,11 +53,11 @@ $(SHLIB): $(OBJS)
 all: $(SHLIB)
 
 install:
-	copy $(SHLIB) "$(PKGLIBDIR)"
-	copy $(EXTENSION).control "$(SHAREDIR)\extension"
-	copy sql\$(EXTENSION)--*.sql "$(SHAREDIR)\extension"
-	mkdir "$(INCLUDEDIR_SERVER)\extension\$(EXTENSION)"
-	for %f in ($(HEADERS)) do copy %f "$(INCLUDEDIR_SERVER)\extension\$(EXTENSION)"
+	copy $(SHLIB) $(PKGLIBDIR)
+	copy $(EXTENSION).control $(SHAREDIR)\extension
+	copy sql\$(EXTENSION)--*.sql $(SHAREDIR)\extension
+	mkdir $(INCLUDEDIR_SERVER)\extension\$(EXTENSION)
+	for %f in ($(HEADERS)) do copy %f $(INCLUDEDIR_SERVER)\extension\$(EXTENSION)
 
 installcheck:
 	"$(BINDIR)\pg_regress" --bindir="$(BINDIR)" $(REGRESS_OPTS) $(REGRESS)
