@@ -48,7 +48,7 @@ LIBS = "$(LIBDIR)\postgres.lib"
 	$(CC) $(CFLAGS) /c $< /Fo$@
 
 $(SHLIB): $(OBJS)
-	$(CC) "$(CFLAGS)" $(OBJS) $(LIBS) /link /DLL /OUT:$(SHLIB)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) /link /DLL /OUT:$(SHLIB)
 
 all: $(SHLIB)
 
