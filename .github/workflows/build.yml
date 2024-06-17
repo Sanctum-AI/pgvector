@@ -29,18 +29,28 @@ jobs:
       - run: make
         env:
           PG_CFLAGS: -DUSE_ASSERT_CHECKING -Wall -Wextra -Werror -Wno-unused-parameter -Wno-sign-compare
-      - name: Pack artifacts
-        id: pack_artifacts
+      - name: Determine architecture
         run: |
           ARCH=$(uname -m)
           echo "Platform architecture is ${ARCH}"
+          echo "ARCH=${ARCH}" >> $GITHUB_ENV
+      - name: Pack artifacts
+        id: pack_artifacts
+        run: |
           mkdir -p ./lib/
           cp vector.so ./lib/
           mkdir ./extension/
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
-          zip -r pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip ./lib/ ./extension/
-          unzip -l pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip
+      - name: Upload artifacts
+        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
+          if-no-files-found: error
+          path: |
+            extension/**
+            lib/**
       - run: |
           export PG_CONFIG=`which pg_config`
           sudo --preserve-env=PG_CONFIG make install
@@ -78,7 +88,6 @@ jobs:
       - name: Pack artifacts
         id: pack_artifacts
         run: |
-          echo "Platform architecture is ${ARCH}"
           mkdir -p ./lib/postgresql/
           cp vector.dylib ./lib/postgresql/
           mkdir ./extension/
@@ -88,11 +97,11 @@ jobs:
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
         uses: actions/upload-artifact@v4
         with:
+          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
           if-no-files-found: error
           path: |
             extension/**
-            sql/**
-          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
+            lib/**
 
       - run: make install
       - run: make installcheck
@@ -134,13 +143,15 @@ jobs:
           New-Item -ItemType Directory -Path "extension" -Force | Out-Null
           Copy-Item -Path "vector.control" -Destination "extension" -Force
           Get-ChildItem -Path "sql" -Filter "vector--*" | Copy-Item -Destination "extension" -Force
-          Compress-Archive -Path "lib", "extension" -Destination "pgvector-16-bin-windows-x64.zip" -CompressionLevel Fastest
       - name: Upload artifacts
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
         uses: actions/upload-artifact@v4
         with:
-          path: pgvector-16-bin-windows-x64.zip
-          name: pgvector-16-bin-windows-x64.zip
+          name: pgvector-16-bin-windows-x64
+          if-no-files-found: error
+          path: |
+            extension/**
+            lib/**
 
       - if: ${{ failure() }}
         run: cat regression.diffs
