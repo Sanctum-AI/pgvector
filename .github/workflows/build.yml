@@ -54,7 +54,7 @@ jobs:
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${{ env.ARCH }}
+          name: pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${{ env.ARCH }}.zip
           if-no-files-found: error
           path: |
             extension/**
@@ -105,7 +105,7 @@ jobs:
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
+          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}.zip
           if-no-files-found: error
           path: |
             extension/**
@@ -155,7 +155,7 @@ jobs:
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: pgvector-16-bin-windows-x64
+          name: pgvector-16-bin-windows-x64.zip
           if-no-files-found: error
           path: |
             extension/**
@@ -236,7 +236,9 @@ jobs:
 
       - name: Move artifacts
         id: move_artifacts
-        run: mkdir -p ./artifact/release && mv ./artifact/*/*.zip ./artifact/release
+        run: |
+          ls -al ./artifact/*/*
+          mkdir -p ./artifact/release && mv ./artifact/*/*.zip ./artifact/release
 
       - name: Create release
         id: create_release
