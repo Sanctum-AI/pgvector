@@ -42,7 +42,7 @@ CFLAGS = $(CFLAGS) $(PG_CFLAGS)
 
 SHLIB = $(EXTENSION).dll
 
-LIBS = "$(LIBDIR)\postgres.lib"
+LIBS = $(LIBDIR)\postgres.lib
 
 .c.obj:
 	$(CC) $(CFLAGS) /c $< /Fo$@
