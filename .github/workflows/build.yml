@@ -43,7 +43,7 @@ jobs:
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
       - name: Upload artifacts
-        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
+        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${{ env.ARCH }}
@@ -94,7 +94,7 @@ jobs:
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
       - name: Upload artifacts
-        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
+        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
@@ -144,7 +144,7 @@ jobs:
           Copy-Item -Path "vector.control" -Destination "extension" -Force
           Get-ChildItem -Path "sql" -Filter "vector--*" | Copy-Item -Destination "extension" -Force
       - name: Upload artifacts
-        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
+        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: pgvector-16-bin-windows-x64
