@@ -101,13 +101,18 @@ jobs:
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
           zip -r pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip ./lib/ ./extension/
-      - name: Upload artifacts
-        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
-        uses: actions/upload-artifact@v4
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
-          if-no-files-found: error
-          path: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}.zip
+          files: pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip
+#      - name: Upload artifacts
+#        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) || github.event.inputs.create_release == 'true' }}
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
+#          if-no-files-found: error
+#          path: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}.zip
 
       - run: make install
       - run: make installcheck
