@@ -84,14 +84,15 @@ jobs:
           mkdir ./extension/
           cp vector.control ./extension/
           cp sql/vector--* ./extension/
-          zip -r pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip ./lib/ ./extension/
-          unzip -l pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip
       - name: Upload artifacts
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
         uses: actions/upload-artifact@v4
         with:
-          path: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}.zip
-          name: pgvector-${{ matrix.postgres }}-bin-windows-${{ env.ARCH }}.zip
+          if-no-files-found: error
+          path: |
+            extension/**
+            sql/**
+          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
 
       - run: make install
       - run: make installcheck
