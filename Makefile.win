@@ -25,18 +25,18 @@ sql\$(EXTENSION)--$(EXTVERSION).sql: sql\$(EXTENSION).sql
 	copy sql\$(EXTENSION).sql $@
 
 # TODO use pg_config
+PGROOT = "C:\Program Files\PostgreSQL\16"
 !ifndef PGROOT
 !error PGROOT is not set
 !endif
-PGROOT = "C:\Program Files\PostgreSQL\16\"
-BINDIR = "$(PGROOT)\bin"
-INCLUDEDIR = "$(PGROOT)\include"
-INCLUDEDIR_SERVER = "$(PGROOT)\include\server"
-LIBDIR = "$(PGROOT)\lib"
-PKGLIBDIR = "$(PGROOT)\lib"
-SHAREDIR = "$(PGROOT)\share"
+BINDIR = $(PGROOT)\bin
+INCLUDEDIR = $(PGROOT)\include
+INCLUDEDIR_SERVER = $(PGROOT)\include\server
+LIBDIR = $(PGROOT)\lib
+PKGLIBDIR = $(PGROOT)\lib
+SHAREDIR = $(PGROOT)\share
 
-CFLAGS = /nologo /I"$(INCLUDEDIR_SERVER)\port\win32_msvc" /I"$(INCLUDEDIR_SERVER)\port\win32" /I"$(INCLUDEDIR_SERVER)" /I"$(INCLUDEDIR)"
+CFLAGS = /nologo /I$(INCLUDEDIR_SERVER)\port\win32_msvc /I$(INCLUDEDIR_SERVER)\port\win32 /I$(INCLUDEDIR_SERVER) /I$(INCLUDEDIR)
 
 CFLAGS = $(CFLAGS) $(PG_CFLAGS)
 
@@ -48,7 +48,7 @@ LIBS = "$(LIBDIR)\postgres.lib"
 	$(CC) $(CFLAGS) /c $< /Fo$@
 
 $(SHLIB): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBS) /link /DLL /OUT:$(SHLIB)
+	$(CC) "$(CFLAGS)" $(OBJS) $(LIBS) /link /DLL /OUT:$(SHLIB)
 
 all: $(SHLIB)
 
