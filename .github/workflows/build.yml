@@ -46,7 +46,7 @@ jobs:
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/dev' ) }}
         uses: actions/upload-artifact@v4
         with:
-          name: pgvector-${{ matrix.postgres }}-bin-macos-${{ env.ARCH }}
+          name: pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${{ env.ARCH }}
           if-no-files-found: error
           path: |
             extension/**
