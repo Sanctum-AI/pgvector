@@ -49,10 +49,10 @@ jobs:
         run: |
           mkdir -p ./lib/
           cp vector.so ./lib/
-          mkdir ./extension/
-          cp vector.control ./extension/
-          cp sql/vector--* ./extension/
-          zip -r pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip ./lib/ ./extension/
+          mkdir ./share/extension/
+          cp vector.control ./share/extension/
+          cp sql/vector--* ./share/extension/
+          zip -r pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip ./lib/ ./share/
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -104,10 +104,10 @@ jobs:
         run: |
           mkdir -p ./lib/postgresql/
           cp vector.dylib ./lib/postgresql/
-          mkdir ./extension/
-          cp vector.control ./extension/
-          cp sql/vector--* ./extension/
-          zip -r pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip ./lib/ ./extension/
+          mkdir -p ./share/postgresql/extension/
+          cp vector.control ./share/postgresql/extension/
+          cp sql/vector--* ./share/postgresql/extension/
+          zip -r pgvector-${{ matrix.postgres }}-bin-macos-${ARCH}.zip ./lib/ ./share/
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -156,12 +156,12 @@ jobs:
       - name: Pack artifacts
         id: pack_artifacts
         run: |
-          New-Item -ItemType Directory -Path "lib" -Force | Out-Null
+          New-Item -ItemType Directory -Path "lib" -Force
           Copy-Item -Path "vector.dll" -Destination "lib" -Force
-          New-Item -ItemType Directory -Path "extension" -Force | Out-Null
-          Copy-Item -Path "vector.control" -Destination "extension" -Force
-          Get-ChildItem -Path "sql" -Filter "vector--*" | Copy-Item -Destination "extension" -Force
-          Compress-Archive -Path "lib", "extension" -Destination "pgvector-16-bin-windows-x64.zip" -CompressionLevel Fastest
+          New-Item -ItemType Directory -Path "share\extension" -Force
+          Copy-Item -Path "vector.control" -Destination "share\extension" -Force
+          Get-ChildItem -Path "sql" -Filter "vector--*" | Copy-Item -Destination "share\extension" -Force
+          Compress-Archive -Path "lib", "share" -Destination "pgvector-16-bin-windows-x64.zip"
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
