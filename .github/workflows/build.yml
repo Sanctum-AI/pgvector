@@ -49,7 +49,7 @@ jobs:
         run: |
           mkdir -p ./lib/
           cp vector.so ./lib/
-          mkdir ./share/extension/
+          mkdir -p./share/extension/
           cp vector.control ./share/extension/
           cp sql/vector--* ./share/extension/
           zip -r pgvector-${{ matrix.postgres }}-bin-${{ matrix.os }}-${ARCH}.zip ./lib/ ./share/
